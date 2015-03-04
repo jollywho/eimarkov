@@ -40,10 +40,10 @@ doMarkov :: MarkovChain -> Markov -> Integer -> IO ()
 doMarkov (x:xs) m count = do
     n <- pick $ value m
     let t = Markov ((snd $ key m),(n)) []
-    let tt = head $ filter (\y -> y==t) (x:xs)
+    let tt = filter (\y -> y == t) (x:xs)
     print $ prntMarkov m n
-    if count > 0
-      then doMarkov (x:xs) tt (count-1)
+    if count > 0 && not (null tt)
+      then doMarkov (x:xs) (head tt) (count-1)
       else return ()
 
 main :: IO ()

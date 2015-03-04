@@ -17,11 +17,6 @@ instance Show (Markov) where
 pick :: [a] -> IO a
 pick xs = randomRIO (0, length xs - 1) >>= return . (xs !!)
 
-prntMarkov :: Markov -> IO String
-prntMarkov x = do
-    m <- pick $ value x
-    return ((show x) ++ " " ++ m)
-
 chain :: Markov -> Markov -> Markov
 chain x y = Markov (key x) (value x ++ value y)
 
@@ -38,18 +33,22 @@ grpMarkov (x:xs)
     | x `elem` xs = grpMarkov (map (\y -> if y == x then chain x y else y) xs)
     | otherwise   = x:grpMarkov xs
 
---loop markovchain
---print key and value
---recurse second key and value in list; decrement count
---repeat until count is 0
+prntMarkov :: Markov -> String -> String
+prntMarkov x s = (show x) ++ " " ++ s
 
---create new key with second and rand value into recurse call
-doMarkov :: MarkovChain -> Markov -> Integer -> IO String
-doMarkov (x:xs) m count = prntMarkov x
+doMarkov :: MarkovChain -> Markov -> Integer -> IO ()
+doMarkov (x:xs) m count = do
+    n <- pick $ value m
+    let t = Markov ((snd $ key m),(n)) []
+    let tt = head $ filter (\y -> y==t) (x:xs)
+    print $ prntMarkov m n
+    if count > 0
+      then doMarkov (x:xs) tt (count-1)
+      else return ()
 
 main :: IO ()
 main = do
     contents <- getLine
     let m = grpMarkov . genMarkov $ words contents
-    let first = head $ tail $ m
-    (doMarkov m first 0) >>= putStrLn :: IO ()
+    first <- pick m
+    doMarkov m first 10

@@ -35,7 +35,7 @@ grpMarkov (x:xs)
     | otherwise   = x:grpMarkov xs
 
 prntMarkov :: Markov -> String -> String
-prntMarkov x s = s ++ " "
+prntMarkov x s = " " ++ s
 
 doMarkov :: MarkovChain -> Markov -> Integer -> IO ()
 doMarkov (x:xs) m count = do
@@ -52,4 +52,8 @@ main = do
     contents <- getLine
     let m = grpMarkov . genMarkov $ words contents
     first <- pick m
+    let f = fst $ key first
+    let s = snd $ key first
+    putStr $ (f ++ " " ++ s)
     doMarkov m first 10
+    putStrLn ""

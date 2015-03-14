@@ -1,0 +1,1 @@
+The roadblock with quantum computers isn't so much the number of qbits required, but the sheer problems with getting those qbits to behave the way we want them to without the ambient motion of the universe fucking with the spin. As soon as we get a 5 qbit system working, it should be an issue of scale

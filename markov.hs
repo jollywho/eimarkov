@@ -5,6 +5,7 @@ data Markov = Markov {
             key :: (String,String),
             value :: [String]
             }
+
 type MarkovChain = [Markov]
 
 instance Eq (Markov) where
@@ -34,15 +35,15 @@ grpMarkov (x:xs)
     | otherwise   = x:grpMarkov xs
 
 prntMarkov :: Markov -> String -> String
-prntMarkov x s = (show x) ++ " " ++ s
+prntMarkov x s = s ++ " "
 
 doMarkov :: MarkovChain -> Markov -> Integer -> IO ()
 doMarkov (x:xs) m count = do
     n <- pick $ value m
     let t = Markov ((snd $ key m),(n)) []
     let tt = filter (\y -> y == t) (x:xs)
-    print $ prntMarkov m n
-    if count > 0 && not (null tt)
+    putStr $ prntMarkov m n
+    if not (null tt)
       then doMarkov (x:xs) (head tt) (count-1)
       else return ()
 
